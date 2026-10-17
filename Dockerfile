@@ -14,7 +14,7 @@ WORKDIR /app/frontend
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Copy package files first for better caching
-COPY frontend/package.json frontend/pnpm-lock.yaml* ./
+COPY frontend/package.json frontend/pnpm-lock.yaml* pnpm-workspace.yml ./
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile || pnpm install
@@ -36,7 +36,7 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Copy backend
-COPY backend/package.json backend/pnpm-lock.yaml* ./backend/
+COPY backend/package.json backend/pnpm-lock.yaml* pnpm-workspace.yml ./backend/
 WORKDIR /app/backend
 RUN pnpm install --frozen-lockfile || pnpm install --prod
 COPY backend/ ./
@@ -49,7 +49,7 @@ VOLUME /app/backend/data
 
 # Copy built frontend
 WORKDIR /app/frontend
-COPY frontend/package.json frontend/pnpm-lock.yaml* ./
+COPY frontend/package.json frontend/pnpm-lock.yaml* pnpm-workspace.yml ./
 RUN pnpm install --frozen-lockfile || pnpm install --prod
 COPY --from=frontend-builder /app/frontend/.next ./.next
 COPY --from=frontend-builder /app/frontend/public ./public
